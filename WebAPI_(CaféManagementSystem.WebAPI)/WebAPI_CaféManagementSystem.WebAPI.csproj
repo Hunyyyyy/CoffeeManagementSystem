@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>WebAPI__CaféManagementSystem.WebAPI_</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Application_(CaféManagementSystem.Application)\Application_CaféManagementSystem.Application.csproj" />
+    <ProjectReference Include="..\Infrastructure_(CaféManagementSystem.Infrastructure)\Infrastructure_CaféManagementSystem.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

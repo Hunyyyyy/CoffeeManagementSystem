@@ -1,0 +1,52 @@
+﻿@model OrderViewModel
+
+<h2>Tạo Đơn Hàng</h2>
+
+<form asp-action="CreateOrder" asp-controller="Order" method="post">
+    <div class="mb-3">
+        <label class="form-label">Mã Bàn</label>
+        <input type="number" asp-for="TableId" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Mã Nhân Viên</label>
+        <input type="number" asp-for="EmployeeId" class="form-control" required />
+    </div>
+
+    <h4>Chi Tiết Đơn Hàng</h4>
+    <div class="mb-3">
+        <label class="form-label">Số Lượng</label>
+        <input type="number" asp-for="OrderDetails[0].Quantity" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Giảm Giá (%)</label>
+        <input type="number" asp-for="OrderDetails[0].Discount" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Chọn Sản Phẩm</label>
+        <select multiple asp-for="OrderDetails[0].ProductIds" class="form-select">
+            <option value="1">Cà phê sữa</option>
+            <option value="2">Trà xanh</option>
+            <option value="3">Nước ép cam</option>
+        </select>
+        <small>Giữ Ctrl (Windows) hoặc Command (Mac) để chọn nhiều sản phẩm.</small>
+    </div>
+
+    <h4>Thanh Toán</h4>
+    <div class="mb-3">
+        <label class="form-label">Số Tiền</label>
+        <input type="number" asp-for="Payments[0].Amount" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Phương Thức Thanh Toán</label>
+        <select asp-for="Payments[0].PaymentMethod" class="form-select">
+            <option value="1">Tiền mặt</option>
+            <option value="2">Chuyển khoản</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Tạo Đơn Hàng</button>
+</form>
