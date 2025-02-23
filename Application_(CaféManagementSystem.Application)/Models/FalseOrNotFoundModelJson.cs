@@ -6,8 +6,13 @@ using System.Threading.Tasks;
 
 namespace Application__CaféManagementSystem.Application_.Models
 {
-    public class FalseOrNotFoundModelJson
-    { 
-        
+    public class ResponseModelAllType<T> 
+    {
+        public string? Message { get; set; }
+        public bool Success { get; set; }
+        public T? Data { get; set; }
+        public List<string>? Errors { get; set; }
+
+
     }
 }

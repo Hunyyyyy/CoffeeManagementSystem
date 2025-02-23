@@ -1,4 +1,5 @@
-﻿using Application__CaféManagementSystem.Application_.DTOs.Orders;
+﻿using Application__CaféManagementSystem.Application_.DTOs.Employees;
+using Application__CaféManagementSystem.Application_.DTOs.Orders;
 using Application__CaféManagementSystem.Application_.DTOs.Products;
 using Application__CaféManagementSystem.Application_.Models;
 using Core_CaféManagementSystem.Core.Entities;
@@ -17,10 +18,12 @@ namespace Application__CaféManagementSystem.Application_.Interface
         Task UpdateInventory(List<OrderDetail> orderDetails);
         Task<ResponseModel<IEnumerable<ProductResponseDto>>> GetAllProductsAsync();
         Task<ResponseModel<ProductResponseDto>> GetProductByIdAsync(int id);
-        Task<ResponseModel<ProductResponseDto>> GetProductByIdForServiceAsync(int id);
+        Task<Product> GetProductByIdForServiceAsync(int id);
         // Task<Product> CreateProductAsync(ProductCreateDto product);
         Task<ResponseModel<ProductResponseDto>> UpdateProductAsync(UpdateProductDto product);
         Task<ResponseModel<ProductResponseDto>> DeleteProductAsync(int id);
-       // Task<bool> CheckStockQuantity(List<Product> products);
+        // Task<bool> CheckStockQuantity(List<Product> products);
+        Task<ResponseModel<List<Product>>> SearchProductAsync(ProductSearchRequestDto product);
+
     }
 }

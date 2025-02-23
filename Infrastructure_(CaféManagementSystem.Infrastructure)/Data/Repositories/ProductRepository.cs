@@ -54,15 +54,16 @@ namespace Infrastructure__CaféManagementSystem.Infrastructure_.Data.Repositorie
 
         public async Task<bool> DeleteAsync(int id)
         {
-            var product = await GetByIdAsync(id);
-            if (product == null)
-            {
-                return false;
-            }
-            product.Deactivate();
+            var product = await _context.Products.FirstOrDefaultAsync(p => p.ProductId == id);
 
-            return true;
+            if (product == null) return false; // Không tìm thấy sản phẩm
+
+            product.Deactivate();
+            _context.Products.Update(product); // Cập nhật lại trạng thái
+
+            return true; // Trả về thành công
         }
+
 
         public async Task<bool> ExistsAsync(int id)
         {
@@ -76,26 +77,22 @@ namespace Infrastructure__CaféManagementSystem.Infrastructure_.Data.Repositorie
 
         public async Task<IEnumerable<Product?>> GetActiveProductsAsync()
         {
-            var products =await _context.Products.Where(p => p.IsActive == true).ToListAsync();
-            if (products == null)
-                 throw new Exception("No active product found.");
-            return products;
+            return await _context.Products.Where(p => p.IsActive == true).ToListAsync(); ;
         }
 
         public async Task<IEnumerable<Product>> GetAllAsync()
         {
-            var products =await _context.Products.ToListAsync();
-            if (products == null)
-            {
-                throw new Exception("No product found.");
-            }
-            return products;
+            return await _context.Products.ToListAsync(); ;
         }
 
-        public async Task<Product> GetByIdAsync(int id)
+        public async Task<Product?> GetByIdAsync(int id)
         {
-            var product = await _context.Products.FindAsync(id);
-            return product ?? throw new Exception($"Product with ID {id} not found.");
+            return await _context.Products.FindAsync(id);
+        }
+
+        public IQueryable<Product> GetProduct()
+        {
+            return _context.Products.AsQueryable();
         }
 
         public async Task<Product?> GetProductByName(string name)

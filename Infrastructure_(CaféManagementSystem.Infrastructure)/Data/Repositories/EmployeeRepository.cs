@@ -17,25 +17,56 @@ namespace Infrastructure__CaféManagementSystem.Infrastructure_.Data.Repositorie
             _context = context;
         }
 
-        public Task<Employee> AddAsync(Employee entity)
+        public async Task<Employee> AddAsync(Employee entity)
         {
-            throw new NotImplementedException();
+            await _context.Employees.AddAsync(entity);
+            return entity;
         }
 
-        public Task<bool> DeleteAsync(int id)
+        public async Task<bool> ChangeIsActiveAsync(bool isActive,int id)
         {
-            throw new NotImplementedException();
+            var employee = await _context.Employees.FindAsync(id);
+            if (employee == null)
+            {
+                return false;
+            }
+            if (isActive)
+            {
+                employee.Activate();
+            }
+            else
+            {
+                employee.Deactivate();
+            }
+            return true;
+
+        }
+
+        public async Task<bool> DeleteAsync(int id)
+        {
+            var employee = await _context.Employees.FindAsync(id);
+            if (employee == null)
+            {
+                return false;
+            }
+            _context.Employees.Remove(employee);
+           return true;
         }
 
         public async Task<bool> ExistsAsync(int id)
         => await _context.Employees.AnyAsync(e => e.EmployeeId == id);
 
-        public Task<IEnumerable<Employee>> GetAllAsync()
+        public async Task<IEnumerable<Employee>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _context.Employees.ToListAsync();
         }
 
-        public  async Task<Employee> GetByIdAsync(int id)
+        public async Task<Employee?> GetByEmailAsync(string email)
+        {
+            return await _context.Employees.FirstOrDefaultAsync(e => e.Email == email);
+        }
+
+        public  async Task<Employee?> GetByIdAsync(int id)
         {
             var employee = await _context.Employees.FindAsync(id);
             if (employee == null)
@@ -45,11 +76,25 @@ namespace Infrastructure__CaféManagementSystem.Infrastructure_.Data.Repositorie
             return employee;
         }
 
+        public async Task<Employee?> GetByNameAync(string fullName)
+        {
+            return await _context.Employees.FirstOrDefaultAsync(e => e.FullName == fullName);
+        }
 
+        public async Task<Employee?> GetByPhoneAsync(string phone)
+        {
+            return await _context.Employees.FirstOrDefaultAsync(e => e.Phone == phone);
+        }
+
+        public IQueryable<Employee>GetEmployees()
+        {
+            return  _context.Employees.AsQueryable();
+        }
 
         public Task UpdateAsync(Employee entity)
         {
-            throw new NotImplementedException();
+            _context.Employees.Update(entity);
+            return Task.CompletedTask;
         }
     }
 }

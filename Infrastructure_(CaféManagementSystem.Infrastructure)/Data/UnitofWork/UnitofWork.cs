@@ -20,7 +20,8 @@ namespace Infrastructure__CaféManagementSystem.Infrastructure_.Data.UnitofWork
         ICoffeeTableRepository coffeeTableRepository,
         IEmployeeRepository employeeRepository,
         IInventoryRepository inventoryRepository,
-        IProductRepository productRepository)
+        IProductRepository productRepository,
+        IUserRepository userRepository)
         {
             _context = context;
             Orders = orderRepository;
@@ -30,6 +31,7 @@ namespace Infrastructure__CaféManagementSystem.Infrastructure_.Data.UnitofWork
             Employees = employeeRepository;
             Inventory = inventoryRepository;
             Products = productRepository;
+            Users = userRepository;
         }
         public IOrderRepository Orders { get; }
         public IInvoiceRepository Invoices { get; }
@@ -38,6 +40,7 @@ namespace Infrastructure__CaféManagementSystem.Infrastructure_.Data.UnitofWork
         public IEmployeeRepository Employees { get; }
         public IInventoryRepository Inventory { get; }
         public IProductRepository Products { get; }
+        public IUserRepository Users { get; }
 
         public async Task<int> SaveChangesAsync()
         => await _context.SaveChangesAsync();

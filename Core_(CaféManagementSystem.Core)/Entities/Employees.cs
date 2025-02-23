@@ -11,13 +11,13 @@ namespace Core_CaféManagementSystem.Core.Entities
         public int EmployeeId { get; private set; }  // Khóa chính
         public string FullName { get; private set; }
         public string Position { get; private set; }
-        public string Email { get; private set; }
-        public string? Phone { get; private set; } // Có thể null
-        public DateTime HireDate { get; private set; }
+        public string? Email { get; private set; }
+        public string Phone { get; private set; } // Có thể null
+        public DateTime? HireDate { get; private set; }
         public bool IsActive { get; private set; } = true;
 
         // Constructor để khởi tạo nhân viên mới
-        public Employee(string fullName, string position, string email, string? phone, DateTime hireDate)
+        public Employee(string fullName, string position, string? email, string phone, DateTime? hireDate)
         {
             FullName = fullName;
             Position = position;
@@ -28,7 +28,7 @@ namespace Core_CaféManagementSystem.Core.Entities
         }
 
         // Hành vi: Cập nhật thông tin nhân viên
-        public void UpdateInfo(string fullName, string position, string? phone)
+        public void UpdateInfo(string fullName, string position, string phone)
         {
             FullName = fullName;
             Position = position;

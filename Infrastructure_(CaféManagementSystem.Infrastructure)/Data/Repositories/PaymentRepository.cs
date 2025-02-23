@@ -42,7 +42,7 @@ namespace Infrastructure__CaféManagementSystem.Infrastructure_.Data.Repositorie
             throw new NotImplementedException();
         }
 
-        public async Task<Payment> GetByIdAsync(int id)
+        public async Task<Payment?> GetByIdAsync(int id)
         {
             var payment =await _context.Payments.FindAsync(id);
             if (payment == null)

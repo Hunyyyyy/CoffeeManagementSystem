@@ -28,7 +28,7 @@ namespace CoffeeManagementSystem.Controllers
 
             var order = await _orderService.CreateOrderAsync(orderDto);
             _logger.LogInformation($"Nhận order từ client: {JsonSerializer.Serialize(order)}");
-            return CreatedAtAction(nameof(GetOrderById),  order);
+            return Ok(order);
         }
         [HttpGet("Status")]
         public async Task<IActionResult> GetStatusOrders()

@@ -9,7 +9,8 @@ namespace Application__CaféManagementSystem.Application_.Helpers
 {
     public static class ResponseFactory
     {
-        public static ResponseModel<T> Succes1s<T>(Action<T> data, string message) where T : class
+   
+        public static ResponseModel<T> Success<T>(T data, string message) 
         {
             return new ResponseModel<T>
             {
@@ -18,25 +19,16 @@ namespace Application__CaféManagementSystem.Application_.Helpers
                 Data = data
             };
         }
-        public static ResponseModel<T> Success<T>(T data, string message) where T : class
-        {
-            return new ResponseModel<T>
-            {
-                Success = true,
-                Message = message,
-                Data = data
-            };
-        }
-        public static ResponseModel<T> Fail<T>(string message, List<string>? errors = null) where T : class
+        public static ResponseModel<T> Fail<T>(string message, List<string>? errors = null) 
         {
             return new ResponseModel<T>
             {
                 Success = false,
                 Message = message,
-                Erros = errors ?? new List<string>()
+                Errors = errors ?? new List<string>()
             };
         }
-        public static ResponseModel<T> NotFound<T>(string message) where T : class
+        public static ResponseModel<T> NotFound<T>(string message) 
         {
             return new ResponseModel<T>
             {
@@ -44,12 +36,12 @@ namespace Application__CaféManagementSystem.Application_.Helpers
                 Message = message
             };
         }
-        public static ResponseModel<T> Error<T>(Exception ex) where T : class
+        public static ResponseModel<T> Error<T>(string message,Exception ex) 
         {
             return new ResponseModel<T>
             {
                 Success = false,
-                Message = ex.Message
+                Message =$"{message} \n {ex.Message}"
             };
         }
     }

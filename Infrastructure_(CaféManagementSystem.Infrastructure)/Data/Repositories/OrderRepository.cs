@@ -57,24 +57,14 @@ namespace Infrastructure__CaféManagementSystem.Infrastructure_.Data.Repositorie
             throw new NotImplementedException();
         }
 
-        public async Task<Order> GetByIdAsync(int id)
+        public async Task<Order?> GetByIdAsync(int id)
         {
-            var order =await _context.Orders.Include(x => x.OrderDetails).FirstOrDefaultAsync(x => x.OrderId == id);
-            if (order == null)
-            {
-                throw new Exception($"Order with ID {id} not found.");
-            }
-            return order;
+            return await _context.Orders.Include(x => x.OrderDetails).FirstOrDefaultAsync(x => x.OrderId == id); ;
         }
 
         public async Task<IEnumerable<Order>> GetStatusOrdersAsync()
         {
-            var statusOrders =await _context.Orders.Include(x => x.OrderDetails).Where(x => x.Status == OrderStatus.Pending).ToListAsync();
-            if (statusOrders == null)
-            {
-                throw new Exception("No order found.");
-            }
-            return statusOrders;
+            return await _context.Orders.Include(x => x.OrderDetails).Where(x => x.Status == OrderStatus.Pending).ToListAsync();
         }
 
         public Task UpdateAsync(Order entity)

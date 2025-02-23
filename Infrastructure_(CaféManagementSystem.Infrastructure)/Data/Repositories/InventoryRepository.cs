@@ -41,7 +41,7 @@ namespace Infrastructure__CaféManagementSystem.Infrastructure_.Data.Repositorie
             throw new NotImplementedException();
         }
 
-        public Task<Inventory> GetByIdAsync(int id)
+        public Task<Inventory?> GetByIdAsync(int id)
         {
             throw new NotImplementedException();
         }

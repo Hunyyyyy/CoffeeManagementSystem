@@ -31,6 +31,7 @@ namespace Infrastructure__CaféManagementSystem.Infrastructure_
             services.AddScoped<IInventoryRepository, InventoryRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IUnitofWork, UnitofWork>();
+            services.AddScoped<IUserRepository, UserRepository>();
             // Đăng ký các repository khác...
 
             // Đăng ký Unit of Work (nếu có)

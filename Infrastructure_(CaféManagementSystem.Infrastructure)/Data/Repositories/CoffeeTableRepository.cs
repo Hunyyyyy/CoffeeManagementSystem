@@ -45,7 +45,7 @@ namespace Infrastructure__CaféManagementSystem.Infrastructure_.Data.Repositorie
             throw new NotImplementedException();
         }
 
-        public async Task<CoffeeTable> GetByIdAsync(int id)
+        public async Task<CoffeeTable?> GetByIdAsync(int id)
         {
             var coffeeTable = await _context.CoffeeTables.FindAsync(id);
             if (coffeeTable == null)

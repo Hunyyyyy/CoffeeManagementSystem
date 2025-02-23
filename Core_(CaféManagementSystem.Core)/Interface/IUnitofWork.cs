@@ -17,6 +17,8 @@ namespace Infrastructure__CaféManagementSystem.Infrastructure_.Data.UnitofWork
         IEmployeeRepository Employees { get; }
         IInventoryRepository Inventory { get; }
         IProductRepository Products { get; }
+
+        IUserRepository Users { get; }
         Task<int> SaveChangesAsync();
         Task BeginTransactionAsync(); // ✅ Bắt đầu giao dịch
         Task CommitTransactionAsync(); // ✅ Hoàn tất giao dịch

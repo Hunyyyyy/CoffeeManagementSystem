@@ -22,40 +22,38 @@ namespace FE_ConffeeManagementSystem.Controllers
         {
             return View();
         }
-        [HttpPost]
-        public async Task<IActionResult> CreateOrder(OrderViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
+        //[HttpPost]
+        //public async Task<IActionResult> CreateOrder(OrderViewModel model)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return View(model);
+        //    }
 
-            var newOrder = new OrderCreateDto
-            {
-                TableId = model.TableId,
-                EmployeeId = model.EmployeeId,
-                InvoiceCreateDto = new InvoiceCreateDto
-                {
-                    Payments = model.Payments
-                },
-                OrderDetails = model.OrderDetails.Select(detail => new OrderDetailCreateDto
-                {
-                    Quantity = detail.Quantity,
-                    Discount = detail.Discount,
-                    Products = detail.ProductIds.Select(id => new GetProductClientDto { ProductId = id }).ToList()
-                }).ToList()
-            };
+        //    var newOrder = new OrderCreateDto
+        //    {
+        //        TableId = model.TableId,
+        //        EmployeeId = model.EmployeeId,
+        //        InvoiceCreateDto = new InvoiceCreateDto
+        //        {
+        //            Payments = model.Payments
+        //        },
+        //        OrderDetails = model.OrderDetails.Select(detail => new OrderDetailCreateDto
+        //        {
+        //            Products = detail.ProductIds.Select(id => new GetProductClientDto { ProductId = id }).ToList()
+        //        }).ToList()
+        //    };
 
-            // Gọi API gửi đơn hàng
-            var response = await _httpClient.PostAsJsonAsync("https://localhost:7058/api/orders", newOrder);
-            if (response.IsSuccessStatusCode)
-            {
-                return RedirectToAction("OrderSuccess");
-            }
+        //    // Gọi API gửi đơn hàng
+        //    var response = await _httpClient.PostAsJsonAsync("https://localhost:7058/api/orders", newOrder);
+        //    if (response.IsSuccessStatusCode)
+        //    {
+        //        return RedirectToAction("OrderSuccess");
+        //    }
 
-            ModelState.AddModelError(string.Empty, "Gửi đơn hàng thất bại.");
-            return View(model);
-        }
+        //    ModelState.AddModelError(string.Empty, "Gửi đơn hàng thất bại.");
+        //    return View(model);
+        //}
 
     }
 }

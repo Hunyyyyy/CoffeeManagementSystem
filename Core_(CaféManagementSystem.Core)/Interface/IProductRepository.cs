@@ -15,6 +15,6 @@ namespace Core_CaféManagementSystem.Core.Interface
         Task<Product?> GetProductByName(string name);
         Task<bool> ChangeQuantityProduct(int id, int quantity);
         //Task <Product> UpdateStockQuantity(int id);
-
+        IQueryable<Product> GetProduct();
     }
 }

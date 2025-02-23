@@ -6,6 +6,7 @@ using Application__CaféManagementSystem.Application_.Models;
 using Core_CaféManagementSystem.Core.Entities;
 using Core_CaféManagementSystem.Core.Exceptions;
 using Infrastructure__CaféManagementSystem.Infrastructure_.Data.UnitofWork;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -83,23 +84,15 @@ namespace Application__CaféManagementSystem.Application_.Services
 
         public async Task<ResponseModel<ProductResponseDto>> DeleteProductAsync(int id)
         {
-            await _unitOfWork.Products.DeleteAsync(id);
+            bool check =  await _unitOfWork.Products.DeleteAsync(id);
+            if (!check)
+                return ResponseFactory.NotFound<ProductResponseDto>($"Không tìm thấy sản phẩm ID {id}");
             await _unitOfWork.SaveChangesAsync();
             var product = await _unitOfWork.Products.GetByIdAsync(id);
-            return new ResponseModel<ProductResponseDto>
-            {
-                Message = "Sản phẩm đã được hủy bỏ thành công",
-                Success = true,
-                Data = new ProductResponseDto
-                {
-                    ProductName = product.ProductName,
-                    Description = product.Description,
-                    UnitPrice = product.UnitPrice,
-                    StockQuantity = product.StockQuantity,
-                    Category = product.Category,
-                    IsActive = product.IsActive
-                }
-            };
+            if (product == null)
+                return ResponseFactory.Fail<ProductResponseDto>("Xóa thất bại");
+            return ResponseFactory.Success(MapProductResponseDto(product), "Sản phẩm đã được hủy bỏ thành công");
+           
         }
 
         public async Task<ResponseModel<IEnumerable<ProductResponseDto>>> GetAllProductsAsync()
@@ -118,6 +111,7 @@ namespace Application__CaféManagementSystem.Application_.Services
 
             var productDtos = allProducts.Select(product => new ProductResponseDto
             {
+                ProductId = product.ProductId,
                 ProductName = product.ProductName,
                 Description = product.Description,
                 UnitPrice = product.UnitPrice,
@@ -144,7 +138,7 @@ namespace Application__CaféManagementSystem.Application_.Services
         }
 
 
-        public async Task<ResponseModel<ProductResponseDto>> GetProductByIdForServiceAsync(int id)
+        public async Task<Product> GetProductByIdForServiceAsync(int id)
         {
             var product = await _unitOfWork.Products.GetByIdAsync(id);
             if (product == null)
@@ -158,28 +152,9 @@ namespace Application__CaféManagementSystem.Application_.Services
             var product = await _unitOfWork.Products.GetProductByName(name);
             if (product == null)
             {
-                return new ResponseModel<ProductResponseDto>
-                {
-                    Message = $"Không tìm thấy sản phẩm {name}",
-                    Success = false,
-                    Data = null
-                };
+                return ResponseFactory.NotFound<ProductResponseDto>($"Không tìm thấy sản phẩm {name}");
             }
-            return new ResponseModel<ProductResponseDto>
-            {
-                Message = "Cập nhật sản phẩm thành công",
-                Success = true,
-                Data = new ProductResponseDto
-                {
-                    ProductId = product.ProductId,
-                    ProductName = product.ProductName,
-                    Description = product.Description,
-                    UnitPrice = product.UnitPrice,
-                    StockQuantity = product.StockQuantity,
-                    Category = product.Category,
-                    IsActive = product.IsActive
-                }
-            };
+            return ResponseFactory.Success(MapProductResponseDto(product), "Cập nhật sản phẩm thành công");
         }
 
         public async Task UpdateInventory(List<OrderDetail> orderDetails)
@@ -205,11 +180,7 @@ namespace Application__CaféManagementSystem.Application_.Services
                 if (existingProduct == null)
                 {
                     await _unitOfWork.RollbackTransactionAsync();
-                    return new ResponseModel<ProductResponseDto>
-                    {
-                        Message = $"Không tìm thấy sản phẩm {productDto.ProductName}",
-                        Success = false
-                    };
+                    return ResponseFactory.NotFound<ProductResponseDto>($"Không tìm thấy sản phẩm {productDto.ProductName}");
                 }
 
                 // ✨ Cập nhật thông tin sản phẩm (Map từ DTO sang Entity)
@@ -225,34 +196,38 @@ namespace Application__CaféManagementSystem.Application_.Services
                 await _unitOfWork.Products.UpdateAsync(existingProduct);
                 await _unitOfWork.SaveChangesAsync();
                 await _unitOfWork.CommitTransactionAsync();
-
-                return new ResponseModel<ProductResponseDto>
-                {
-                    Message = "Cập nhật sản phẩm thành công",
-                    Success = true,
-                    Data = new ProductResponseDto
-                    {
-                        ProductId = existingProduct.ProductId,
-                        ProductName = existingProduct.ProductName,
-                        Description = existingProduct.Description,
-                        UnitPrice = existingProduct.UnitPrice,
-                        StockQuantity = existingProduct.StockQuantity,
-                        Category = existingProduct.Category,
-                        IsActive = existingProduct.IsActive
-                    }
-                };
+                return ResponseFactory.Success(MapProductResponseDto(existingProduct), "Cập nhật sản phẩm thành công");
+                
             }
             catch (Exception ex)
             {
                 await _unitOfWork.RollbackTransactionAsync();
-                return new ResponseModel<ProductResponseDto>
-                {
-                    Message = ex.Message,
-                    Success = false
-                };
+                return ResponseFactory.Error<ProductResponseDto>("Không thể cập nhật sản phẩm",ex);
+
             }
         }
 
+        public async Task<ResponseModel<List<Product>>> SearchProductAsync(ProductSearchRequestDto product)
+        {
+            try
+            {
+                var query = _unitOfWork.Products.GetProduct();// Đảm bảo GetEmployees() không là async Task<IQueryable<T>>
 
+                if (product.ProductId.HasValue)
+                    query = query.Where(e => e.ProductId == product.ProductId.Value);
+                if (!string.IsNullOrEmpty(product.ProductName))
+                    query = query.Where(e => EF.Functions.Like(e.ProductName, $"%{product.ProductName}%")); // Tìm không phân biệt chữ hoa/thường
+                if (!string.IsNullOrEmpty(product.Category))
+                    query = query.Where(e => e.Category == product.Category);
+                var result = await query.ToListAsync(); // Thực thi truy vấn ở đây
+
+                return ResponseFactory.Success(result, "Tìm kiếm sản phẩm thành công");
+            }
+            catch (Exception ex)
+            {
+                return ResponseFactory.Fail<List<Product>>("Không tìm thấy" + ex.Message);
+
+            }
+        }
     }
 }
