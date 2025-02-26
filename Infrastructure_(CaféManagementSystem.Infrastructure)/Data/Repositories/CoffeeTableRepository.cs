@@ -33,11 +33,11 @@ namespace Infrastructure__CaféManagementSystem.Infrastructure_.Data.Repositorie
 
         public async Task<bool> ExistsAsync(int id)
            => await _context.CoffeeTables.AnyAsync(x => x.TableId == id);
-        
 
-        public Task<IEnumerable<CoffeeTable>> GetAllAsync()
+
+        public IQueryable<CoffeeTable> GetAll()
         {
-            throw new NotImplementedException();
+            return _context.CoffeeTables.AsQueryable();
         }
 
         public Task<IEnumerable<CoffeeTable>> GetAvailableTablesAsync()

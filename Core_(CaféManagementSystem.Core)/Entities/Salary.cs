@@ -15,7 +15,7 @@ namespace Core_CaféManagementSystem.Core.Entities
         public decimal BaseSalary { get; private set; } // Lương cơ bản
         public decimal Bonus { get; private set; } // Thưởng (mặc định là 0)
         public decimal TotalAmount { get; private set; } // Tổng lương
-        public required virtual Employee Employee { get; set; }
+        public virtual Employee? Employee { get; set; }
         // Constructor để tạo bản ghi lương mới
         public Salary(int employeeId, byte month, int year, decimal baseSalary, decimal bonus = 0)
         {
@@ -36,7 +36,7 @@ namespace Core_CaféManagementSystem.Core.Entities
             Year = year;
             BaseSalary = baseSalary;
             Bonus = bonus;
-            TotalAmount = CalculateTotalSalary();
+            TotalAmount = CalculateTotalSalary(baseSalary, bonus);
         }
 
         // Hành vi: Cập nhật lương cơ bản và thưởng
@@ -50,13 +50,24 @@ namespace Core_CaféManagementSystem.Core.Entities
 
             BaseSalary = newBaseSalary;
             Bonus = newBonus;
-            TotalAmount = CalculateTotalSalary();
+            TotalAmount = CalculateTotalSalary(newBaseSalary, newBonus);
         }
 
         // Phương thức tính tổng lương
-        private decimal CalculateTotalSalary()
+        private decimal CalculateTotalSalary(decimal baseRate, decimal bonus)
         {
-            return BaseSalary + Bonus;
+                try
+            {
+                if (bonus < 0)
+                {
+                    throw new ArgumentException("Bonus cannot be negative", nameof(bonus));
+                }
+                return baseRate + bonus;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Lỗi CaculatorBaseSalary" + ex.Message);
+            }
         }
     }
 

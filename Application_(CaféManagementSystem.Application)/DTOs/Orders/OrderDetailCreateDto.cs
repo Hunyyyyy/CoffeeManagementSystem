@@ -15,7 +15,9 @@ namespace Application__CaféManagementSystem.Application_.DTOs.Orders
     {
 
         [Required(ErrorMessage = "Products is required.")]
-        public List<GetProductClientDto> Products { get; set; } = new();
+        public int ProductId { get; set; }
+        public required int Quantity { get; set; } = 1;
+        public decimal Discount { get; set; }
 
     }
 }

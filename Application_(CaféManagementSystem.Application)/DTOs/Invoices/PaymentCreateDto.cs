@@ -9,7 +9,6 @@ namespace Application__CaféManagementSystem.Application_.DTOs.Invoices
 {
     public class PaymentCreateDto
     {
-        public int InvoiceId { get; set; }
         public decimal Amount { get; set; } // Số tiền thanh toán
         public PaymentMethod PaymentMethod { get; set; } // Phương thức thanh toán
 

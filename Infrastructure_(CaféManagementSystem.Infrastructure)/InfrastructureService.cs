@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Infrastructure__CaféManagementSystem.Infrastructure_.Data.UnitofWork;
+using Core__CaféManagementSystem.Core_.Interface;
 
 namespace Infrastructure__CaféManagementSystem.Infrastructure_
 {
@@ -32,6 +33,8 @@ namespace Infrastructure__CaféManagementSystem.Infrastructure_
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IUnitofWork, UnitofWork>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IUserRoleRepository, UserRoleRepository>();
+            services.AddScoped<ISalaryRepository, SalaryRepository>();
             // Đăng ký các repository khác...
 
             // Đăng ký Unit of Work (nếu có)

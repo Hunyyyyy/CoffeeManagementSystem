@@ -28,6 +28,16 @@ namespace Application__CaféManagementSystem.Application_.Helpers
                 Errors = errors ?? new List<string>()
             };
         }
+        public static ResponseModel<T> FailWithData<T>(T data,string message, List<string>? errors = null)
+        {
+            return new ResponseModel<T>
+            {
+                Success = false,
+                Message = message,
+                Data = data,
+                Errors = errors ?? new List<string>()
+            };
+        }
         public static ResponseModel<T> NotFound<T>(string message) 
         {
             return new ResponseModel<T>

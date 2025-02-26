@@ -56,9 +56,9 @@ namespace Infrastructure__CaféManagementSystem.Infrastructure_.Data.Repositorie
         public async Task<bool> ExistsAsync(int id)
         => await _context.Employees.AnyAsync(e => e.EmployeeId == id);
 
-        public async Task<IEnumerable<Employee>> GetAllAsync()
+        public IQueryable<Employee> GetAll()
         {
-            return await _context.Employees.ToListAsync();
+            return _context.Employees.AsQueryable();
         }
 
         public async Task<Employee?> GetByEmailAsync(string email)

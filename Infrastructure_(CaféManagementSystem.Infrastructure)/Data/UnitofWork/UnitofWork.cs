@@ -1,4 +1,5 @@
-﻿using Core_CaféManagementSystem.Core.Interface;
+﻿using Core__CaféManagementSystem.Core_.Interface;
+using Core_CaféManagementSystem.Core.Interface;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,9 @@ namespace Infrastructure__CaféManagementSystem.Infrastructure_.Data.UnitofWork
         IEmployeeRepository employeeRepository,
         IInventoryRepository inventoryRepository,
         IProductRepository productRepository,
-        IUserRepository userRepository)
+        IUserRepository userRepository,
+        IUserRoleRepository userRoleRepository,
+        ISalaryRepository salaryRepository)
         {
             _context = context;
             Orders = orderRepository;
@@ -32,6 +35,8 @@ namespace Infrastructure__CaféManagementSystem.Infrastructure_.Data.UnitofWork
             Inventory = inventoryRepository;
             Products = productRepository;
             Users = userRepository;
+            UserRoles = userRoleRepository;
+            Salaries = salaryRepository;
         }
         public IOrderRepository Orders { get; }
         public IInvoiceRepository Invoices { get; }
@@ -41,6 +46,9 @@ namespace Infrastructure__CaféManagementSystem.Infrastructure_.Data.UnitofWork
         public IInventoryRepository Inventory { get; }
         public IProductRepository Products { get; }
         public IUserRepository Users { get; }
+        public IUserRoleRepository UserRoles { get; }
+
+        public ISalaryRepository Salaries { get; }
 
         public async Task<int> SaveChangesAsync()
         => await _context.SaveChangesAsync();

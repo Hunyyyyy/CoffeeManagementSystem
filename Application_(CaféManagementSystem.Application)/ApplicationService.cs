@@ -31,8 +31,11 @@ namespace Application__CaféManagementSystem.Application_
             services.AddScoped<IEmployeeService, EmployeeService>();
             services.AddScoped<IJwtProvider, JwtProvider>();
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ISalaryService, SalaryService>();
             services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<IRevenueAndReportService, RevenueAndReportService>();
 
             //JwtSettings là configuration section, không phải một service.
             services.Configure<JwtSettings>(configuration.GetSection("Jwt"));

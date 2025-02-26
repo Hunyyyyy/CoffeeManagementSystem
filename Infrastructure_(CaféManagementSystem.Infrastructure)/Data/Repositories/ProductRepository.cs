@@ -80,10 +80,11 @@ namespace Infrastructure__CaféManagementSystem.Infrastructure_.Data.Repositorie
             return await _context.Products.Where(p => p.IsActive == true).ToListAsync(); ;
         }
 
-        public async Task<IEnumerable<Product>> GetAllAsync()
+        public IQueryable<Product> GetAll()
         {
-            return await _context.Products.ToListAsync(); ;
+            return _context.Products.AsQueryable();
         }
+
 
         public async Task<Product?> GetByIdAsync(int id)
         {
@@ -106,7 +107,10 @@ namespace Infrastructure__CaféManagementSystem.Infrastructure_.Data.Repositorie
             return Task.CompletedTask;
         }
 
-
-
+        public Task UpdateRangeAsync(IEnumerable<Product> products)
+        {
+            _context.Products.UpdateRange(products);
+            return Task.CompletedTask;
+        }
     }
 }

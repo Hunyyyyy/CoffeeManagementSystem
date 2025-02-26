@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Application__CaféManagementSystem.Application_.DTOs.Payments;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,5 +12,6 @@ namespace Application__CaféManagementSystem.Application_.DTOs.Invoices
     {
         public decimal TotalAmount { get; set; }
         public string? PaymentStatus { get; set; }
+        public required PaymentResponseDto Payment { get; set; }
     }
 }

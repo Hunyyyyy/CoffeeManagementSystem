@@ -19,6 +19,6 @@ namespace Application__CaféManagementSystem.Application_.DTOs.Orders
         public InvoiceResponseDto? Invoice { get; set; }
 
         // Danh sách các chi tiết đơn hàng
-        public required List<OrderDetailResponseDto> OrderDetails { get; set; }
+        public List<OrderDetailResponseDto> OrderDetails { get; set; } = new();
     }
 }

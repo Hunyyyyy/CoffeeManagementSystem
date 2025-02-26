@@ -27,19 +27,20 @@ namespace Infrastructure__CaféManagementSystem.Infrastructure_.Data.Repositorie
             throw new NotImplementedException();
         }
 
-        public Task<bool> ExistsAsync(int id)
+        public async Task<bool> ExistsAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Users.AnyAsync(u => u.UserId == id);
         }
 
-        public Task<IEnumerable<User>> GetAllAsync()
+        public IQueryable<User> GetAll()
         {
-            throw new NotImplementedException();
+            return _context.Users.AsQueryable();
         }
 
-        public Task<User?> GetByIdAsync(int id)
+
+        public async Task<User?> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Users.FindAsync(id);   
         }
 
         public async Task<User?> GetByUsernameAsync(string username)

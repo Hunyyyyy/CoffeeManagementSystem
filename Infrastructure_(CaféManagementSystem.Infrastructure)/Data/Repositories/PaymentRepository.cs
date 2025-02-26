@@ -37,10 +37,11 @@ namespace Infrastructure__CaféManagementSystem.Infrastructure_.Data.Repositorie
             return true;
         }
 
-        public Task<IEnumerable<Payment>> GetAllAsync()
+        public IQueryable<Payment> GetAll()
         {
-            throw new NotImplementedException();
+            return _context.Payments.AsQueryable();
         }
+
 
         public async Task<Payment?> GetByIdAsync(int id)
         {

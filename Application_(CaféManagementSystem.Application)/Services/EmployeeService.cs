@@ -99,6 +99,10 @@ namespace Application__CaféManagementSystem.Application_.Services
 
         public async Task<ResponseModel<EmployeeDto>> DeleteEmployeeAsync(int id)
         {
+            if (id <= 0 || id == 12)
+            {
+                return ResponseFactory.Fail<EmployeeDto>("Employee id is invalid.");
+            }
             var employee = await _unitofWork.Employees.GetByIdAsync(id);
             if (employee == null)
             {
@@ -121,12 +125,16 @@ namespace Application__CaféManagementSystem.Application_.Services
 
         public async Task<ResponseModel<IEnumerable<EmployeeDto>>> GetAllEmployeeAsync()
         {
-            return ResponseFactory.Success((await _unitofWork.Employees.GetAllAsync()).Select(MapEmployeeToEmployeeDto), "Lấy danh sách nhân viên thành công");
+            return ResponseFactory.Success((await _unitofWork.Employees.GetAll().ToListAsync()).Select(MapEmployeeToEmployeeDto), "Lấy danh sách nhân viên thành công");
 
         }
 
         public async Task<ResponseModel<EmployeeDto>> GetEmployeeByIdAsync(int id)
         {
+            if (id <= 0 || id == 12)
+            {
+                return ResponseFactory.Fail<EmployeeDto>("Employee id is invalid.");
+            }
             var employee = await _unitofWork.Employees.GetByIdAsync(id);
             if (employee == null)
             {
@@ -137,6 +145,10 @@ namespace Application__CaféManagementSystem.Application_.Services
 
         public async Task<ResponseModel<EmployeeDto>> UpdateEmployeeAsync(int id, UpdateEmployeeDto employee)
         {
+            if (id <= 0 || id == 12)
+            {
+                return ResponseFactory.Fail<EmployeeDto>("Employee id is invalid.");
+            }
             var existingEmployee =await _unitofWork.Employees.GetByIdAsync(id);
             if (existingEmployee == null)
             {
@@ -184,6 +196,10 @@ namespace Application__CaféManagementSystem.Application_.Services
 
         public async Task<ResponseModel<bool>> ChangeIsActiveEmployeeAsync(int id, bool isActive)
         {
+            if (id <= 0 || id == 12)
+            {
+                return ResponseFactory.Fail<bool>("Employee id is invalid.");
+            }
             bool result = await _unitofWork.Employees.ChangeIsActiveAsync(isActive, id);
             if (result)
             {
@@ -220,5 +236,14 @@ namespace Application__CaféManagementSystem.Application_.Services
             }
         }
 
+        public async Task<bool> GetEmployeeActiveStatus(int id)
+        {
+            var em =  await _unitofWork.Employees.GetByIdAsync(id);
+            if(em == null)
+                return false;
+            if(em.IsActive)
+                return true;
+            return false;
+        }
     }
 }

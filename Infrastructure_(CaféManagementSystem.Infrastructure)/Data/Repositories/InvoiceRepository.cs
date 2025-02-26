@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Core_CaféManagementSystem.Core.Common.Enums;
 
 namespace Infrastructure__CaféManagementSystem.Infrastructure_.Data.Repositories
 {
@@ -38,9 +39,9 @@ namespace Infrastructure__CaféManagementSystem.Infrastructure_.Data.Repositorie
             return true;
         }
 
-        public Task<IEnumerable<Invoice>> GetAllAsync()
+        public IQueryable<Invoice> GetAll()
         {
-            throw new NotImplementedException();
+            return _context.Invoices.AsQueryable();
         }
 
         public async Task<Invoice?> GetByIdAsync(int id)
@@ -62,6 +63,23 @@ namespace Infrastructure__CaféManagementSystem.Infrastructure_.Data.Repositorie
             }
             return invoice;
         }
+
+        public IQueryable<Invoice> GetPaidInvoices()
+        {
+            return _context.Invoices
+                .Where(i => i.PaymentStatus == PaymentStatus.Paid);
+        }
+        public IQueryable<Salary> GetSalariesForCurrentMonth()
+        {
+            var currentYear = DateTime.UtcNow.Year;
+            var currentMonth = DateTime.UtcNow.Month;
+
+            return _context.Salaries
+                .Where(s => s.Year == currentYear && s.Month == currentMonth);
+        }
+
+
+
 
         public Task UpdateAsync(Invoice entity)
         {

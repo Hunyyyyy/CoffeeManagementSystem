@@ -26,15 +26,14 @@ namespace Application__CaféManagementSystem.Application_.Services
             decimal totalAmount = 0m;
             foreach (var orderDetail in orderDetails)
             {
-                foreach (var item in orderDetail.Products)
-                {
-                    var product = await _productService.GetProductByIdForServiceAsync(item.ProductId)
-                        ?? throw new BusinessException($"Sản phẩm ID {item.ProductId} không tồn tại!");
+                
+                    var product = await _productService.GetProductByIdForServiceAsync(orderDetail.ProductId)
+                        ?? throw new BusinessException($"Sản phẩm ID {orderDetail.ProductId} không tồn tại!");
 
                     decimal unitPrice = product.UnitPrice;
-                    decimal subTotal = (unitPrice * item.Quantity) - ((item.Discount / 100) * (unitPrice * item.Quantity));
+                    decimal subTotal = (unitPrice * orderDetail.Quantity) - ((orderDetail.Discount / 100) * (unitPrice * orderDetail.Quantity));
                     totalAmount += subTotal;
-                }
+                
             }
             return totalAmount;
         }
@@ -44,19 +43,18 @@ namespace Application__CaféManagementSystem.Application_.Services
             List<OrderDetail> orderDetailsList = new List<OrderDetail>();
             foreach (var detail in orderDetails)
             {
-                foreach (var item in detail.Products)
-                {
+               
                     // Lấy sản phẩm từ DB theo ProductId
-                    var product = await _productService.GetProductByIdForServiceAsync(item.ProductId)
-                        ?? throw new BusinessException($"Sản phẩm ID {item.ProductId} không tồn tại!");
+                    var product = await _productService.GetProductByIdForServiceAsync(detail.ProductId)
+                        ?? throw new BusinessException($"Sản phẩm ID {detail.ProductId} không tồn tại!");
 
                     // Tạo đối tượng OrderDetail
-                    var orderDetail = new OrderDetail(orderId, product.ProductId, item.Quantity, product.UnitPrice, item.Discount);
+                    var orderDetail = new OrderDetail(orderId, product.ProductId, detail.Quantity, product.UnitPrice, detail.Discount);
 
                     // Thêm OrderDetail vào DB ngay lập tức
                     await _unitOfWork.Orders.AddOrderDetailAsync(orderDetail);
                     orderDetailsList.Add(orderDetail);// Gọi thêm trực tiếp vào DB
-                }
+                
             }
             return orderDetailsList.ToList();
         }

@@ -26,10 +26,6 @@ namespace Application__CaféManagementSystem.Application_.Services
             _passwordHasher = passwordHasher;
             _jwtProvider = jwtProvider;
         }
-        public Task<ResponseModel<User>> AddNewAccount(CreateUserDto user)
-        {
-            throw new NotImplementedException();
-        }
 
         public async Task<ResponseModel<string>> GetRoleNameByIdAsync(int roleId)
         {

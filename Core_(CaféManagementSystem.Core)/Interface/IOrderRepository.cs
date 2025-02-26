@@ -13,5 +13,7 @@ namespace Core_CaféManagementSystem.Core.Interface
         Task<IEnumerable<Order>> GetStatusOrdersAsync();
         Task<OrderDetail> AddOrderDetailAsync(OrderDetail orderDetail);
         Task<Order> CancelOrderAsync(int id);
+        IQueryable<OrderDetail> GetCompletedOrderDetails();
+        IQueryable<Order> GetCompletedOrders();
     }
 }

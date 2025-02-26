@@ -25,7 +25,7 @@ namespace CoffeeManagementSystem.Controllers
             return View();
         }
         [Authorize] // Chỉ yêu cầu đăng nhập, không kiểm tra role
-        [HttpPost]
+        [HttpPost("add")]
         public async Task<IActionResult> AddProduct(CreateProductDto productDto)
         {
             var roleId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
@@ -52,8 +52,8 @@ namespace CoffeeManagementSystem.Controllers
 
             return Ok(product);
         }
-
-        [HttpGet]
+        
+        [HttpGet("get")]
         public async Task<IActionResult> GetAllProduct()
         {
             var productList = await _productService.GetAllProductsAsync();
@@ -63,10 +63,18 @@ namespace CoffeeManagementSystem.Controllers
 
             return Ok(productList); // Trả về HTTP 200 với danh sách sản phẩm
         }
+        [Authorize]
         [HttpPost]
         [Route("update")]
         public async Task<IActionResult> UpdateProdcutAsync(UpdateProductDto productDto)
         {
+            var roleId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+            if (roleId == null) 
+                return Forbid(); // Trả về 403 nếu không có quyền
+            var roleName = await _authService.GetRoleNameByIdAsync(int.Parse(roleId));
+            if (roleName.Equals("Admin") && roleName.Equals("Quản lý"))
+                return Forbid(); // Trả về 403 nếu không có quyền
+
             var product = await _productService.UpdateProductAsync(productDto);
             if (!product.Success)
                 return BadRequest(product); // Trả về HTTP 400 nếu không tìm thấy sản phẩm
@@ -82,9 +90,17 @@ namespace CoffeeManagementSystem.Controllers
 
             return Ok(product); // Trả về HTTP 200 với danh sách sản phẩm
         }
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProdcutAsync(int id)
         {
+            var roleId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+            if (roleId == null)
+                return Forbid(); // Trả về 403 nếu không có quyền
+            var roleName = await _authService.GetRoleNameByIdAsync(int.Parse(roleId));
+            if (roleName.Equals("Admin") && roleName.Equals("Quản lý"))
+                return Forbid(); // Trả về 403 nếu không có quyền
+
             var product = await _productService.DeleteProductAsync(id);
             if (!product.Success)
                 return BadRequest(product); // Trả về HTTP 400 nếu không tìm thấy sản phẩm

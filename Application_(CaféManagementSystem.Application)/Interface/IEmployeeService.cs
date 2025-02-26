@@ -18,6 +18,7 @@ namespace Application__CaféManagementSystem.Application_.Interface
         Task<ResponseModel<EmployeeDto>> DeleteEmployeeAsync(int id);
         Task<ResponseModel<bool>> ChangeIsActiveEmployeeAsync(int id, bool isActive);
         Task<ResponseModel<List<Employee>>> SearchEmployeesAsync(EmployeeSearchRequestDto employee);
+        Task<bool> GetEmployeeActiveStatus(int id);
 
     }
 }

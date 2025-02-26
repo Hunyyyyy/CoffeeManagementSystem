@@ -1,4 +1,5 @@
-﻿using Core_CaféManagementSystem.Core.Interface;
+﻿using Core__CaféManagementSystem.Core_.Interface;
+using Core_CaféManagementSystem.Core.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,8 @@ namespace Infrastructure__CaféManagementSystem.Infrastructure_.Data.UnitofWork
         IProductRepository Products { get; }
 
         IUserRepository Users { get; }
+        IUserRoleRepository UserRoles { get; }
+        ISalaryRepository Salaries { get; }
         Task<int> SaveChangesAsync();
         Task BeginTransactionAsync(); // ✅ Bắt đầu giao dịch
         Task CommitTransactionAsync(); // ✅ Hoàn tất giao dịch

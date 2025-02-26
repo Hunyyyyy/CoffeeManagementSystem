@@ -20,12 +20,20 @@ namespace Application__CaféManagementSystem.Application_.Services
             _unitOfWork = unitOfWork;
         }
 
-        public Task<CoffeeTable> GetCoffeeTableByIdAsync(int tableId)
+        public Task<CoffeeTable?> GetCoffeeTableByIdAsync(int tableId)
         {
            var coffeeTable = _unitOfWork.CoffeeTables.GetByIdAsync(tableId);
             if (coffeeTable == null)
                 throw new BusinessException("Bàn không tồn tại!");
             return coffeeTable;
+        }
+
+        public async Task<string> GetTableNumberByIdAsync(int tableId)
+        {
+            var coffeeTable = await _unitOfWork.CoffeeTables.GetByIdAsync(tableId);
+            if (coffeeTable == null)
+                throw new BusinessException("Bàn không tồn tại!");
+            return coffeeTable.TableNumber;
         }
 
         public async Task UpdateTableStatusAsync(int tableId, CoffeeTableStatus tableStatus)

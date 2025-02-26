@@ -59,16 +59,7 @@ namespace Application__CaféManagementSystem.Application_.Services
                 {
                     Message = "Thêm sản phẩm thành công",
                     Success = true,
-                    Data = new ProductResponseDto
-                    {
-                        ProductId = newProduct.ProductId,
-                        ProductName = newProduct.ProductName,
-                        Description = newProduct.Description,
-                        UnitPrice = newProduct.UnitPrice,
-                        StockQuantity = newProduct.StockQuantity,
-                        Category = newProduct.Category,
-                        IsActive = newProduct.IsActive
-                    }
+                    Data = MapProductResponseDto(newProduct)
                 };
             }
             catch (Exception ex)
@@ -97,35 +88,17 @@ namespace Application__CaféManagementSystem.Application_.Services
 
         public async Task<ResponseModel<IEnumerable<ProductResponseDto>>> GetAllProductsAsync()
         {
-            var allProducts = await _unitOfWork.Products.GetAllAsync();
+            var allProducts = await _unitOfWork.Products.GetAll().ToListAsync();
 
             if (!allProducts.Any()) // Kiểm tra danh sách rỗng thay vì null
             {
-                return new ResponseModel<IEnumerable<ProductResponseDto>>
-                {
-                    Success = false,
-                    Message = "Không tìm thấy danh sách sản phẩm",
-                    Data = Enumerable.Empty<ProductResponseDto>()
-                };
+                return ResponseFactory.NotFound<IEnumerable<ProductResponseDto>>("Không có sản phẩm nào");
             }
 
-            var productDtos = allProducts.Select(product => new ProductResponseDto
-            {
-                ProductId = product.ProductId,
-                ProductName = product.ProductName,
-                Description = product.Description,
-                UnitPrice = product.UnitPrice,
-                StockQuantity = product.StockQuantity,
-                Category = product.Category,
-                IsActive = product.IsActive
-            }).ToList();
+            var productDtos = allProducts.Select(MapProductResponseDto).ToList();
 
-            return new ResponseModel<IEnumerable<ProductResponseDto>>
-            {
-                Success = true,
-                Message = "Lấy danh sách sản phẩm thành công",
-                Data = productDtos
-            };
+
+            return ResponseFactory.Success(productDtos.AsEnumerable(), "Tìm thấy danh sách sản phẩm");
         }
 
 
@@ -157,19 +130,31 @@ namespace Application__CaféManagementSystem.Application_.Services
             return ResponseFactory.Success(MapProductResponseDto(product), "Cập nhật sản phẩm thành công");
         }
 
-        public async Task UpdateInventory(List<OrderDetail> orderDetails)
+        public async Task<ResponseModel<bool>> ValidateAndUpdateStockAsync(List<OrderDetailCreateDto> orderDetails)
         {
-            // 🔹 Cập nhật hàng tồn kho
-            foreach (var detail in orderDetails)
-            {
-                var product = await _unitOfWork.Products.GetByIdAsync(detail.ProductId);
-                if (product == null)
-                    throw new BusinessException($"Sản phẩm ID {detail.ProductId} không tồn tại!");
+            var productsToUpdate = new List<Product>();
 
-                product.ReduceStock(detail.Quantity);
-                await _unitOfWork.Products.UpdateAsync(product);
+            foreach (var orderDetail in orderDetails)
+            {
+                var product = await _unitOfWork.Products.GetByIdAsync(orderDetail.ProductId);
+                if (product == null)
+                    return ResponseFactory.Fail<bool>($"Sản phẩm ID {orderDetail.ProductId} không tồn tại!");
+
+                if (product.StockQuantity < orderDetail.Quantity)
+                    return ResponseFactory.Fail<bool>($"Sản phẩm {product.ProductName} không đủ số lượng!");
+
+                // 🔹 Trừ số lượng tồn kho (giảm số lượng ngay trong object)
+                product.ReduceStock(orderDetail.Quantity);
+                productsToUpdate.Add(product);
             }
+
+            // 🔹 Cập nhật toàn bộ sản phẩm trong 1 lần batch
+            await _unitOfWork.Products.UpdateRangeAsync(productsToUpdate);
+            await _unitOfWork.SaveChangesAsync();
+
+            return ResponseFactory.Success(true, "Cập nhật tồn kho thành công!");
         }
+
 
         public async Task<ResponseModel<ProductResponseDto>> UpdateProductAsync(UpdateProductDto productDto)
         {

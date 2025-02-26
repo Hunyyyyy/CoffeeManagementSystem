@@ -36,9 +36,9 @@ namespace Infrastructure__CaféManagementSystem.Infrastructure_.Data.Repositorie
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Inventory>> GetAllAsync()
+        public IQueryable<Inventory> GetAll()
         {
-            throw new NotImplementedException();
+            return _context.Inventory.AsQueryable();
         }
 
         public Task<Inventory?> GetByIdAsync(int id)

@@ -15,7 +15,7 @@ namespace Application__CaféManagementSystem.Application_.Interface
     {
         Task <ResponseModel<ProductResponseDto>> GetProductByNameAsync(string name);
         Task<ResponseModel<ProductResponseDto>> AddProductAsync(CreateProductDto product);
-        Task UpdateInventory(List<OrderDetail> orderDetails);
+        Task<ResponseModel<bool>> ValidateAndUpdateStockAsync(List<OrderDetailCreateDto> orderDetails);
         Task<ResponseModel<IEnumerable<ProductResponseDto>>> GetAllProductsAsync();
         Task<ResponseModel<ProductResponseDto>> GetProductByIdAsync(int id);
         Task<Product> GetProductByIdForServiceAsync(int id);

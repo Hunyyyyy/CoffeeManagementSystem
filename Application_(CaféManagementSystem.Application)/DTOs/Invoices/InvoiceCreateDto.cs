@@ -10,6 +10,6 @@ namespace Application__CaféManagementSystem.Application_.DTOs.Invoices
 {
     public class InvoiceCreateDto
     {
-        public List<PaymentCreateDto> Payments { get; set; } = new();
+        public PaymentCreateDto Payments { get; set; } = new();
     }
 }

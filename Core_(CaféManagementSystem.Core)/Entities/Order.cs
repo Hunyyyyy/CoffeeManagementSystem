@@ -52,6 +52,7 @@ namespace Core_CaféManagementSystem.Core.Entities
 
         // Hành vi: Thay đổi trạng thái đơn hàng
         public void ChangeStatus(OrderStatus newStatus) => Status = newStatus;
+        public void UpdateEmployeeId(int employeeId) => EmployeeId = employeeId;
     }
 
 }

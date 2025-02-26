@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,10 +15,10 @@ namespace Core_CaféManagementSystem.Core.Entities
         public string PasswordHash { get; private set; } // Mật khẩu đã băm (Not Null)
         public int RoleId { get; private set; } // Khóa ngoại tham chiếu đến UserRoles
         public DateTime? LastLogin { get; private set; } // Thời gian đăng nhập lần cuối (có thể null)
-        public required virtual Employee Employee { get; set; }
-        public required virtual UserRole? Role { get; set; }
+        public  virtual Employee? Employee { get;  set; }
+        public  virtual UserRole? Role { get; set; }
         // Constructor để tạo tài khoản người dùng
-        public User(int employeeId, string username, string passwordHash, int roleId)
+        public User(int employeeId, string username, string passwordHash,int roleId)
         {
             if (string.IsNullOrWhiteSpace(username))
                 throw new ArgumentException("Tên đăng nhập không được để trống!");

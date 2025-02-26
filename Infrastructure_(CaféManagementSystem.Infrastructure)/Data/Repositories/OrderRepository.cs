@@ -52,10 +52,7 @@ namespace Infrastructure__CaféManagementSystem.Infrastructure_.Data.Repositorie
             return true;
         }
 
-        public Task<IEnumerable<Order>> GetAllAsync()
-        {
-            throw new NotImplementedException();
-        }
+        
 
         public async Task<Order?> GetByIdAsync(int id)
         {
@@ -66,12 +63,27 @@ namespace Infrastructure__CaféManagementSystem.Infrastructure_.Data.Repositorie
         {
             return await _context.Orders.Include(x => x.OrderDetails).Where(x => x.Status == OrderStatus.Pending).ToListAsync();
         }
-
+        public IQueryable<Order> GetCompletedOrders()
+        {
+            return _context.Orders
+                .Where(o => o.Status == OrderStatus.Completed);
+        }
+        public IQueryable<OrderDetail> GetCompletedOrderDetails()
+        {
+            return _context.OrderDetails
+                .Include(od => od.Order)
+                .Where(od => od.Order!=null && od.Order.Status == OrderStatus.Completed);
+        }
         public Task UpdateAsync(Order entity)
         {
             _context.Orders.Update(entity);
             // Trả về sản phẩm đã được cập nhật
             return Task.CompletedTask;
+        }
+
+        public IQueryable<Order> GetAll()
+        {
+            return _context.Orders.AsQueryable();
         }
     }
 }
