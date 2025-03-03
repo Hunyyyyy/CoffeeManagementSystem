@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace CoffeeManagementSystem.Controllers
 {
     [ApiController]
-    [Route("api/product")]
+    [Route("api/Controller")]
     public class ProductController : Controller
     {
         private readonly IProductService _productService;

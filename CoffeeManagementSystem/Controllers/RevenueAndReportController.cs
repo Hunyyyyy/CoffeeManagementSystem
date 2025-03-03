@@ -6,7 +6,7 @@ namespace CoffeeManagementSystem.Controllers
 {
     [ApiController]
     //[Authorize]
-    [Route("api/revenue-and-report")]
+    [Route("api/[Controller]")]
     public class RevenueAndReportController : Controller
     {
         private readonly IRevenueAndReportService _revenueAndReportService;

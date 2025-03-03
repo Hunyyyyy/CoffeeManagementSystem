@@ -27,6 +27,7 @@ namespace Application__CaféManagementSystem.Application_.Services
         {
             var productDto = new ProductResponseDto
             {
+                ProductId = product.ProductId,
                 ProductName = product.ProductName,
                 Description = product.Description,
                 UnitPrice = product.UnitPrice,

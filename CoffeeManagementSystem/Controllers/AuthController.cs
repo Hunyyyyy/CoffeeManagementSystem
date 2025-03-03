@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CoffeeManagementSystem.Controllers
 {
     [ApiController]
-    [Route("api/auth")]
+    [Route("api/[Controller]")]
     public class AuthController : Controller
     {
         private readonly IAuthService _authService;

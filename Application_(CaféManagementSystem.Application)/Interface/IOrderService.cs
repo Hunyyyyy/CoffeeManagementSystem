@@ -8,18 +8,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Core_CaféManagementSystem.Core.Common.Enums;
 
 namespace Application__CaféManagementSystem.Application_.Interface
 {
     public interface IOrderService
     {
-        Task<IEnumerable<Order>> GetAllOrdersAsync();
-        Task<Order> GetOrderByIdAsync(int id);
-        Task<IEnumerable<Order>> GetStatusOrdersAsync();
+        Task<ResponseModel<IEnumerable<OrderResposeDto>>> GetAllOrdersAsync();
+        Task<ResponseModel<OrderResposeDto>> GetOrderByIdAsync(int id);
+        Task<ResponseModel<IEnumerable<OrderResposeDto>>> GetStatusOrdersAsync(OrderStatus status);
         Task<ResponseModel<OrderResposeDto>> SendOrderFromCustomerToEmployee(
             OrderCreateDto orderCreateDto);
         Task<ResponseModel<OrderResposeDto>> ConfirmOrderAsync(EmployeeConfirmOrderDto orderDto);
         Task<Order> UpdateOrderAsync(Order order);
-        Task<Order> CancelOrderAsync(int id);
+        Task<ResponseModel<bool>> CancelOrderAsync(int id);
     }
 }

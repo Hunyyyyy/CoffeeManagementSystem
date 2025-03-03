@@ -9,6 +9,7 @@ using Core_CaféManagementSystem.Core.Entities;
 using Core_CaféManagementSystem.Core.Exceptions;
 using Core_CaféManagementSystem.Core.Interface;
 using Infrastructure__CaféManagementSystem.Infrastructure_.Data.UnitofWork;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,7 +38,26 @@ namespace Application_CaféManagementSystem.Application.Services
             _invoiceService = invoiceService;
             _orderDetailService = orderDetailService;
         }
-
+        // ✅ Map kết quả trả về
+        public OrderResposeDto MapOrder(Order order)
+        {
+            return new OrderResposeDto
+            {
+                OrderId = order.OrderId,
+                TableNumber = order.TableId.ToString(),
+                OrderDate = order.OrderDate,
+                TotalAmount = order.TotalAmount,
+                Status = order.Status.ToString(),
+                OrderDetails = order.OrderDetails.Select(od => new OrderDetailResponseDto
+                {
+                    ProductId = od.ProductId,
+                    ProductName = od.Product?.ProductName,
+                    Quantity = od.Quantity,
+                    UnitPrice = od.UnitPrice,
+                    Discount = od.Discount
+                }).ToList()
+            };
+        }
         //chưa tối ưu mã
         public async Task<ResponseModel<OrderResposeDto>> ConfirmOrderAsync(EmployeeConfirmOrderDto orderDto)
         {
@@ -126,27 +146,66 @@ namespace Application_CaféManagementSystem.Application.Services
         }
 
 
-        public Task<Order> CancelOrderAsync(int id)
+        public async Task<ResponseModel<bool>> CancelOrderAsync(int id)
         {
-          throw new NotImplementedException();
+          var order = await _unitOfWork.Orders.GetByIdAsync(id);
+            if (order == null)
+                return ResponseFactory.NotFound<bool>($"Không tìm thấy đơn hàng ID {id}");
+            if (order.Status == OrderStatus.Cancelled)
+                return ResponseFactory.Fail<bool>("Đơn hàng đã bị hủy, không thể hủy lại");
+            if (order.Status == OrderStatus.Completed)
+                return ResponseFactory.Fail<bool>("Đơn hàng đã hoàn thành, không thể hủy");
+            await _unitOfWork.BeginTransactionAsync();
+            try
+            {
+                // ✅ Cập nhật trạng thái đơn hàng
+                await UpdateOrderStatusAsync(order, OrderStatus.Cancelled);
+                // ✅ Cập nhật trạng thái bàn
+                await _tableService.UpdateTableStatusAsync(order.TableId, CoffeeTableStatus.Available);
+                await _unitOfWork.SaveChangesAsync();
+                await _unitOfWork.CommitTransactionAsync();
+                return ResponseFactory.Success(true, "Hủy đơn hàng thành công");
+            }
+            catch (Exception ex)
+            {
+                await _unitOfWork.RollbackTransactionAsync();
+                return ResponseFactory.Fail<bool>($"Lỗi hủy đơn hàng: {ex.Message}");
+            }
+            
         }
 
 
-        public Task<IEnumerable<Order>> GetAllOrdersAsync()
+        public async Task<ResponseModel<IEnumerable<OrderResposeDto>>> GetAllOrdersAsync()
         {
-            throw new NotImplementedException();
+           var orders =  await _unitOfWork.Orders.GetAll().ToListAsync();
+            var invoices = await _unitOfWork.Invoices.GetAll().ToListAsync();
+            if (orders == null)
+                return ResponseFactory.NotFound<IEnumerable<OrderResposeDto>>("Không có đơn hàng nào");
+            // ✅ Map kết quả trả về
+            var result = orders.Select(MapOrder).ToList();
+            return ResponseFactory.Success(result.AsEnumerable(), "Lấy danh sách đơn hàng thành công");
         }
 
-        public Task<Order> GetOrderByIdAsync(int id)
+        public async Task<ResponseModel<OrderResposeDto>> GetOrderByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var order = await _unitOfWork.Orders.GetByIdAsync(id);
+            if (order == null)
+                return ResponseFactory.NotFound<OrderResposeDto>($"Không tìm thấy đơn hàng ID {id}");
+            return ResponseFactory.Success(MapOrder(order), "Lấy đơn hàng thành công");
         }
 
-        public async Task<IEnumerable<Order>> GetStatusOrdersAsync()
+        public async Task<ResponseModel<IEnumerable<OrderResposeDto>>> GetStatusOrdersAsync(OrderStatus status)
         {
-            var orders = await _unitOfWork.Orders.GetStatusOrdersAsync();
-            return orders;
+            var orders = await _unitOfWork.Orders.GetStatusOrders()
+                .Where(o => o.Status == status)  // Chỉ lọc theo trạng thái cần tìm
+                .ToListAsync();
+
+            if (!orders.Any())
+                return ResponseFactory.NotFound<IEnumerable<OrderResposeDto>>("Không có đơn hàng nào có trạng thái này");
+
+            return ResponseFactory.Success(orders.Select(MapOrder), "Lấy danh sách đơn hàng thành công");
         }
+
 
         public Task<Order> UpdateOrderAsync(Order order)
         {

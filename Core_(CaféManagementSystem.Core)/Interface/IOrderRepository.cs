@@ -10,7 +10,7 @@ namespace Core_CaféManagementSystem.Core.Interface
 {
     public interface IOrderRepository : RepositoriesBase<Order>
     {
-        Task<IEnumerable<Order>> GetStatusOrdersAsync();
+        IQueryable<Order> GetStatusOrders();
         Task<OrderDetail> AddOrderDetailAsync(OrderDetail orderDetail);
         Task<Order> CancelOrderAsync(int id);
         IQueryable<OrderDetail> GetCompletedOrderDetails();

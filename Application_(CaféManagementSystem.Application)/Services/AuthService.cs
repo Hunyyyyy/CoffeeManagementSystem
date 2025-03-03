@@ -3,6 +3,7 @@ using Application__CaféManagementSystem.Application_.Helpers;
 using Application__CaféManagementSystem.Application_.Interface;
 using Application__CaféManagementSystem.Application_.Models;
 using Core_CaféManagementSystem.Core.Entities;
+using Core_CaféManagementSystem.Core.Exceptions;
 using Infrastructure__CaféManagementSystem.Infrastructure_.Data.UnitofWork;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -27,12 +28,12 @@ namespace Application__CaféManagementSystem.Application_.Services
             _jwtProvider = jwtProvider;
         }
 
-        public async Task<ResponseModel<string>> GetRoleNameByIdAsync(int roleId)
+        public async Task<string> GetRoleNameByIdAsync(int roleId)
         {
             var roleName =  await _unitOfWork.Users.GetRoleNameByIdAsync(roleId);
             if(roleName == null)
-                return ResponseFactory.NotFound<string>("Không tìm thấy quyền");
-            return ResponseFactory.Success(roleName, "Lấy tên quyền thành công");
+                throw new Exception("Không tìm thấy tên quyền");
+            return roleName;
         }
 
         //update thêm ResponseAllTypeFactory,tạo thêm IResponseFactory

@@ -14,10 +14,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application_CaféManagement
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure_CaféManagementSystem.Infrastructure", "Infrastructure_(CaféManagementSystem.Infrastructure)\Infrastructure_CaféManagementSystem.Infrastructure.csproj", "{07FA00F3-7750-43EB-AC6A-52AABE0F2FF2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAPI_CaféManagementSystem.WebAPI", "WebAPI_(CaféManagementSystem.WebAPI)\WebAPI_CaféManagementSystem.WebAPI.csproj", "{AB28CE03-CFFA-4A3D-8701-D935C905A788}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests_CaféManagementSystem.Tests", "Tests_(CaféManagementSystem.Tests)\Tests_CaféManagementSystem.Tests.csproj", "{94137321-8868-4220-B43A-8C06E1353782}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -40,14 +36,6 @@ Global
 		{07FA00F3-7750-43EB-AC6A-52AABE0F2FF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{07FA00F3-7750-43EB-AC6A-52AABE0F2FF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{07FA00F3-7750-43EB-AC6A-52AABE0F2FF2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AB28CE03-CFFA-4A3D-8701-D935C905A788}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AB28CE03-CFFA-4A3D-8701-D935C905A788}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AB28CE03-CFFA-4A3D-8701-D935C905A788}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AB28CE03-CFFA-4A3D-8701-D935C905A788}.Release|Any CPU.Build.0 = Release|Any CPU
-		{94137321-8868-4220-B43A-8C06E1353782}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{94137321-8868-4220-B43A-8C06E1353782}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{94137321-8868-4220-B43A-8C06E1353782}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{94137321-8868-4220-B43A-8C06E1353782}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

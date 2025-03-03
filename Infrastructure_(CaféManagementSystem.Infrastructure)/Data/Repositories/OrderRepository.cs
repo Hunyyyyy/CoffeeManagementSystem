@@ -59,9 +59,9 @@ namespace Infrastructure__CaféManagementSystem.Infrastructure_.Data.Repositorie
             return await _context.Orders.Include(x => x.OrderDetails).FirstOrDefaultAsync(x => x.OrderId == id); ;
         }
 
-        public async Task<IEnumerable<Order>> GetStatusOrdersAsync()
+        public IQueryable<Order> GetStatusOrders()
         {
-            return await _context.Orders.Include(x => x.OrderDetails).Where(x => x.Status == OrderStatus.Pending).ToListAsync();
+            return _context.Orders.AsQueryable();
         }
         public IQueryable<Order> GetCompletedOrders()
         {

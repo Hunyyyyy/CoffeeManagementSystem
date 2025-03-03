@@ -9,7 +9,7 @@ using System.Security.Claims;
 namespace CoffeeManagementSystem.Controllers
 {
     [ApiController]
-    [Route("api/employee")]
+    [Route("api/[Controller]")]
     public class EmployeeController : Controller
     {
         private readonly IEmployeeService _employeeService;

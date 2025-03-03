@@ -12,7 +12,7 @@ namespace Application__CaféManagementSystem.Application_.Interface
     public interface IAuthService
     {
         Task<ResponseModel<string>> LoginAsync(UserDto user);
-        Task<ResponseModel<string>> GetRoleNameByIdAsync(int roleId);
+        Task<string> GetRoleNameByIdAsync(int roleId);
         Task<ResponseModel<string>?> RefreshTokenAsync();
         //Task<bool> isAdminOrManager(string roleId);
     }
