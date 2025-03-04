@@ -70,16 +70,7 @@ namespace CoffeeManagementSystem.Controllers
         [HttpPatch("cancelOrder")]
         public async Task<IActionResult> CancelOrder([FromQuery] int id)
         {
-            var roleId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
-            if (roleId == null)
-            {
-                return Forbid(); // Trả về 403 nếu không có quyền
-            }
-            var roleName = await _authService.GetRoleNameByIdAsync(int.Parse(roleId));
-            if (!roleName.Equals("Nhân viên thu ngân") || !roleName.Equals("Quản lý"))
-            {
-                return Forbid(); // Trả về 403 nếu không có quyền
-            }
+            
             var result = await _orderService.CancelOrderAsync(id);
             if (result.Data)
             {
