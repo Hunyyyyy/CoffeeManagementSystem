@@ -8,6 +8,7 @@ namespace Core_CaféManagementSystem.Core.Common
 {
     public static class Constants
     {
+
         public static Dictionary<string,decimal> RoleBaseSalary = new Dictionary<string, decimal>
         {
             { "Quản lý", 5000000 },

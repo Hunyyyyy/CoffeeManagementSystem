@@ -2,6 +2,7 @@
 using Application__CaféManagementSystem.Application_.DTOs.Orders;
 using Application__CaféManagementSystem.Application_.Interface;
 using Application__CaféManagementSystem.Application_.Services;
+using Core_CaféManagementSystem.Core.Common;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -24,19 +25,11 @@ namespace CoffeeManagementSystem.Controllers
             _logger = logger;
             _authService = authService;
         }
+        [Authorize(Policy = nameof(Enums.Role.Employee))]
         [HttpPost("confirm")]
         public async Task<IActionResult> CreateOrder([FromBody] EmployeeConfirmOrderDto orderDto)
         {
-            var roleId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
-            if (roleId == null)
-            {
-                return Forbid(); // Trả về 403 nếu không có quyền
-            }
-            var roleName = await _authService.GetRoleNameByIdAsync(int.Parse(roleId));
-            if (!roleName.Equals("Nhân viên thu ngân") || !roleName.Equals("Quản lý"))
-            {
-                return Forbid(); // Trả về 403 nếu không có quyền
-            }
+           
             if (orderDto == null)
             {
                 return BadRequest("Dữ liệu đầu vào không hợp lệ.");
@@ -47,40 +40,19 @@ namespace CoffeeManagementSystem.Controllers
             _logger.LogInformation($"Nhận order từ client: {JsonSerializer.Serialize(order)}");
             return Ok(order);
         }
-
+        [Authorize(Policy = nameof(Enums.Role.Employee))]
         [HttpGet("Status")]
         public async Task<IActionResult> GetStatusOrders([FromQuery] OrderStatus status)
         {
-            var roleId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
-            if (roleId == null)
-            {
-                return Forbid(); // Trả về 403 nếu không có quyền
-            }
-            var roleName = await _authService.GetRoleNameByIdAsync(int.Parse(roleId));
-            if (!roleName.Equals("Nhân viên thu ngân") || !roleName.Equals("Quản lý"))
-            {
-                return Forbid(); // Trả về 403 nếu không có quyền
-            }
             var orders = await _orderService.GetStatusOrdersAsync(status);
             return Ok(orders);
         }
 
-
+        [Authorize(Policy = nameof(Enums.Role.Employee))]
         [HttpGet("get")]
         public async Task<IActionResult> GetOrderById([FromQuery]int id)
         {
-            var roleId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
-            if (roleId == null)
-            {
-                return Forbid(); // Trả về 403 nếu không có quyền
-            }
-            var roleName = await _authService.GetRoleNameByIdAsync(int.Parse(roleId));
-            if (!roleName.Equals("Nhân viên thu ngân") || !roleName.Equals("Quản lý"))
-            {
-                return Forbid(); // Trả về 403 nếu không có quyền
-            }
             var order = await _orderService.GetOrderByIdAsync(id);
-            if (order == null) return NotFound();
             return Ok(order);
         }
         [HttpPost("add")]
@@ -94,6 +66,7 @@ namespace CoffeeManagementSystem.Controllers
             var order = await _orderService.SendOrderFromCustomerToEmployee(orderCreateDto);
             return Ok(order);
         }
+        [Authorize(Policy = nameof(Enums.Role.Employee))]
         [HttpPatch("cancelOrder")]
         public async Task<IActionResult> CancelOrder([FromQuery] int id)
         {
@@ -114,19 +87,11 @@ namespace CoffeeManagementSystem.Controllers
             }
             return BadRequest("Hủy đơn hàng thất bại");
         }
+        [Authorize(Policy = nameof(Enums.Role.Employee))]
         [HttpGet("getAll")]
         public async Task<IActionResult> GetAllOrders()
         {
-            var roleId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
-            if (roleId == null)
-            {
-                return Forbid(); // Trả về 403 nếu không có quyền
-            }
-            var roleName = await _authService.GetRoleNameByIdAsync(int.Parse(roleId));
-            if (!roleName.Equals("Nhân viên thu ngân") || !roleName.Equals("Quản lý"))
-            {
-                return Forbid(); // Trả về 403 nếu không có quyền
-            }
+           
             var orders = await _orderService.GetAllOrdersAsync();
             return Ok(orders);
         }

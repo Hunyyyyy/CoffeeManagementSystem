@@ -37,5 +37,10 @@ namespace Core_CaféManagementSystem.Core.Common
             Occupied = 1,   // Đã có khách
             Reserved =2    // Đã đặt trước
         }
+        public enum Role
+        {
+            Manager = 1,    // Quản lý
+            Employee = 2   // Nhân viên
+        }
     }
 }

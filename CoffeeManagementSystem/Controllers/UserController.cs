@@ -1,11 +1,13 @@
 ﻿using Application__CaféManagementSystem.Application_.DTOs.Users;
 using Application__CaféManagementSystem.Application_.Interface;
+using Core_CaféManagementSystem.Core.Common;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoffeeManagementSystem.Controllers
 {
     [ApiController]
+    [Authorize(Policy = nameof(Enums.Role.Manager))]
     [Route("api/[controller]")]
     public class UserController : Controller
     {
@@ -14,7 +16,6 @@ namespace CoffeeManagementSystem.Controllers
         {
             _userService = userService;
         }
-        [Authorize]
         [HttpPost("add")]
         public async Task<IActionResult> AddNewUser([FromBody] CreateUserDto createUserDto)
         {
@@ -23,7 +24,6 @@ namespace CoffeeManagementSystem.Controllers
             var response = await _userService.AddNewUser(createUserDto);
             return Ok(response);
         }
-        [Authorize]
         [HttpGet("get")]
         public async Task<IActionResult> GetAllUser()
         {

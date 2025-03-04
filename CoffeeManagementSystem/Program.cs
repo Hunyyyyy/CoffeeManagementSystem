@@ -1,7 +1,9 @@
 ﻿using Application__CaféManagementSystem.Application_;
+using Core_CaféManagementSystem.Core.Common;
 using Infrastructure__CaféManagementSystem.Infrastructure_;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using System.Reflection.Metadata;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -33,8 +35,8 @@ var key = Encoding.UTF8.GetBytes(keyString);
 // 🔹 Cấu hình Authorization
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("AdminPolicy", policy => policy.RequireRole("1"));
-    options.AddPolicy("EmployeePolicy", policy => policy.RequireRole("2"));
+    options.AddPolicy(nameof(Enums.Role.Manager), policy => policy.RequireRole("1"));
+    options.AddPolicy(nameof(Enums.Role.Employee), policy => policy.RequireRole("2"));
 });
 
 builder.Services.AddLogging();

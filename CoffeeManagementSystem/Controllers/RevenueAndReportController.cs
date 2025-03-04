@@ -1,11 +1,12 @@
 ﻿using Application__CaféManagementSystem.Application_.Interface;
+using Core_CaféManagementSystem.Core.Common;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoffeeManagementSystem.Controllers
 {
     [ApiController]
-    //[Authorize]
+    [Authorize(Policy = nameof(Enums.Role.Manager))]
     [Route("api/[Controller]")]
     public class RevenueAndReportController : Controller
     {
